@@ -6,6 +6,12 @@ const app = express();
 const PORT = process.env.PORT;
 dotenv.config();
 
+// Db Connection
+connectDB();
+
+//Middlewares
+app.use(express.json())
+
 
 
 
