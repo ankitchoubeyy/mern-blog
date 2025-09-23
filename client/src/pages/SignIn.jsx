@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -10,6 +10,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   // Function to handle change
   const handleChange = (e) => {
@@ -29,7 +30,7 @@ const SignIn = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/users/register",
+        "http://localhost:3000/api/users/login",
         formData
       );
       if (res) {
@@ -40,6 +41,9 @@ const SignIn = () => {
 
         // Set Loading False
         setLoading(false)
+
+        // go to homepage
+        navigate('/')
 
         // Removing the data from the form
         setFormData({
@@ -101,7 +105,7 @@ const SignIn = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+            className="bg-blue-600 cursor-pointer text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
           >
             {loading ? "Login...": "Login"}
           </button>

@@ -113,7 +113,7 @@ const SignUp = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+            className="bg-blue-600 cursor-pointer text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
           >
             {loading ? "Saving..." : "Register"}
           </button>
