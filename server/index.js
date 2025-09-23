@@ -1,20 +1,28 @@
-import express from 'express'
+import express from 'express';
+import dotenv from 'dotenv';
 import connectDB from './config/database.js';
-import dotenv from 'dotenv'
+import userRouter from './routes/UserRoutes.js';
+
+dotenv.config(); // ✅ must be at the top
 
 const app = express();
-const PORT = process.env.PORT;
-dotenv.config();
+const PORT = process.env.PORT || 3000;
 
-// Db Connection
+// DB Connection
 connectDB();
 
-//Middlewares
-app.use(express.json())
+// Middleware
+app.use(express.json());
 
+// User Routes
+app.use("/api/users", userRouter);
 
+// Root route (optional)
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
 
-
-app.listen(PORT, (req, res)=> {
-    console.log(`App is listening to PORT : ${PORT}`);
-})
+// Start server
+app.listen(PORT, () => {
+  console.log(`App is listening on PORT: ${PORT}`);
+});
