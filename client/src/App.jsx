@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import SignIn from "./pages/SignIn";
@@ -13,12 +14,19 @@ import Footer from "./components/Footer";
 const App = () => {
   return (
     <BrowserRouter>
+      {/* Header */}
       <Header />
+
+      {/* Toaster */}
+      <Toaster position="top-right" reverseOrder={false}  containerStyle={{
+        top: 80
+      }}/>
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/singin" element={<SignIn />} />
-        <Route path="/singup" element={<SignUp />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="*" element={<NotFound />} />
