@@ -2,15 +2,21 @@ import React, { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 
 const SignIn = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Function to handle change
   const handleChange = (e) => {
@@ -23,41 +29,40 @@ const SignIn = () => {
   // Function to handle the Sbumit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`Form Data: ${formData}`);
+    console.log("Form Data:", formData);
 
-    // Loading True
-    setLoading(true)
+    dispatch(signInStart()); // call it properly
 
     try {
       const res = await axios.post(
         "http://localhost:3000/api/users/login",
         formData
       );
-      if (res) {
-        console.log(`Login successfull: ${res.message}`);
 
-        // Showing Toast Message
-        toast.success(res.data.message || "Login successful!");
+      console.log("Login successful:", res.data);
 
-        // Set Loading False
-        setLoading(false)
+      // Show toast
+      toast.success(res.data.message || "Login successful!");
 
-        // go to homepage
-        navigate('/')
+      // Pass only user data
+      dispatch(signInSuccess(res.data.user));
 
-        // Removing the data from the form
-        setFormData({
-          email: "",
-          password: "",
-        });
-      }
+      // Redirect to homepage
+      navigate("/");
+
+      // Reset form
+      setFormData({
+        email: "",
+        password: "",
+      });
     } catch (error) {
-      console.log(`Error while Login: ${error}`);
-      
-      // Error toast
-      toast.error(
-        error.response?.data?.message || "Login failed. Try again."
-      );
+      console.error("Error while Login:", error);
+
+      // Pass error message
+      dispatch(signInFailure(error.response?.data?.error || error.message));
+
+      // Show error toast
+      toast.error(error.response?.data?.error || "Login failed. Try again.");
     }
   };
 
@@ -107,12 +112,12 @@ const SignIn = () => {
             type="submit"
             className="bg-blue-600 cursor-pointer text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
           >
-            {loading ? "Login...": "Login"}
+            Login
           </button>
 
           <p className="text-sm text-gray-500 text-center">
             Don't have an account?{" "}
-            <Link to={'/signup'} className="text-blue-600 hover:underline">
+            <Link to={"/signup"} className="text-blue-600 hover:underline">
               Register
             </Link>
           </p>
