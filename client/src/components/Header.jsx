@@ -1,9 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Menu, X, PencilLine } from 'lucide-react';
+import { Search, Menu, X, PencilLine, ChevronDown } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
@@ -51,11 +69,55 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Sign In Button - Desktop */}
+          {/* Desktop User Section */}
           <div className="hidden md:flex">
-            <Link to={'/singin'} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-              Sign In
-            </Link>
+            {currentUser ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center space-x-2 focus:outline-none"
+                >
+                  <img
+                    src={currentUser.avatar || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvQPREvPprCnFOjFEO-j9-3P1xM-ipMus1hQ&s'}
+                    alt="User avatar"
+                    className="h-8 w-8 rounded-full shadow-2xl border-1"
+                  />
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                    <div className="px-4 py-2 border-b border-gray-200">
+                      <p className="text-sm font-medium text-gray-900">{currentUser.username || 'User'}</p>
+                      <p className="text-xs text-gray-500">{currentUser.email || 'user@example.com'}</p>
+                    </div>
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Manage Profile
+                    </Link>
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/logout"
+                      className="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Logout
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to={'/signin'} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                Sign In
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -104,11 +166,41 @@ export default function Header() {
             >
               Projects
             </Link>
-          </div>
-          <div className="px-4 py-3 border-t border-gray-200">
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-              Sign In
-            </button>
+            {currentUser ? (
+              <>
+                <div className="px-3 py-2 border-t border-gray-200">
+                  <p className="text-sm font-medium text-gray-900">{currentUser.username || 'User'}</p>
+                  <p className="text-xs text-gray-500">{currentUser.email || 'user@example.com'}</p>
+                </div>
+                <Link
+                  to="/profile"
+                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                >
+                  Manage Profile
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/logout"
+                  className="text-red-500 hover:text-red-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+                >
+                  Logout
+                </Link>
+              </>
+            ) : (
+              <div className="px-4 py-3 border-t border-gray-200">
+                <Link
+                  to="/signin"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors block text-center"
+                >
+                  Sign In
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

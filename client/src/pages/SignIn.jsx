@@ -36,7 +36,8 @@ const SignIn = () => {
     try {
       const res = await axios.post(
         "http://localhost:3000/api/users/login",
-        formData
+        formData, 
+        {withCredentials: true}
       );
 
       console.log("Login successful:", res.data);

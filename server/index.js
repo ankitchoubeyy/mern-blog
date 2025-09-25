@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/database.js';
 import userRouter from './routes/UserRoutes.js';
+import postRouter from './routes/PostRoutes.js';
 
 dotenv.config(); // ✅ must be at the top
 
@@ -23,6 +24,9 @@ app.use(cors({
 
 // User Routes
 app.use("/api/users", userRouter);
+
+// Post Routes
+app.use("/api/posts", postRouter)
 
 // Root route (optional)
 app.get("/", (req, res) => {
