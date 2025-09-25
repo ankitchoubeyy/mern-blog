@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Sidebar from "../components/Dashboard/Sidebar";
 import Profile from "../components/Dashboard/Content/Profile";
 import Posts from "../components/Dashboard/Content/Posts";
-import Stats from "../components/Dashboard/Content/Stats";
 import Users from "../components/Dashboard/Content/Users";
 
 const Dashboard = () => {
@@ -12,7 +11,6 @@ const Dashboard = () => {
     switch (activeSection) {
       case "profile": return <Profile />;
       case "posts": return <Posts />;
-      case "stats": return <Stats />;
       case "users": return <Users />;
       default: return null;
     }

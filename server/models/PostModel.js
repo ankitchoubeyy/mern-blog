@@ -5,7 +5,7 @@ const commentSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Reference to User model
+      ref: "User",
       required: true,
     },
     text: {
@@ -16,7 +16,7 @@ const commentSchema = new mongoose.Schema(
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User", // Users who liked this comment
+        ref: "User",
       },
     ],
   },
@@ -41,14 +41,26 @@ const postSchema = new mongoose.Schema(
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // Post created by which user
+      ref: "User",
       required: true,
     },
-    comments: [commentSchema], // Array of comments
+    categories: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
+    tags: [
+      {
+        type: String,
+        trim: true,
+        lowercase: true, // optional: normalize tags
+      },
+    ],
+    comments: [commentSchema],
   },
   { timestamps: true }
 );
 
 const Post = mongoose.model("Post", postSchema);
-
 export default Post;

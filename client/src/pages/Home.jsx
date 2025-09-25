@@ -1,6 +1,5 @@
 import React from 'react'
 import Hero from '../components/Home/Hero';
-import BlogCard from '../components/BlogCcard';
 import BlogContainer from '../components/BlogContainer';
 
 const Home = () => {

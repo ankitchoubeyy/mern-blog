@@ -1,40 +1,28 @@
-import React from "react";
-import BlogCard from "./BlogCcard";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import BlogCard from "./BlogCard";
 
 const BlogContainer = () => {
-  // Sample blog data (replace with dynamic data from API or state)
-  const blogs = [
-    {
-      id: "1",
-      title: "The Future of AI: What to Expect in 2025",
-      excerpt: "Explore the latest advancements in artificial intelligence and how they're shaping our world.",
-      author: "John Doe",
-      date: "September 25, 2025",
-      readTime: "5 min read",
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      tags: ["AI", "Technology", "Future"],
-    },
-    {
-      id: "2",
-      title: "Mastering React: Tips for Building Scalable Apps",
-      excerpt: "Learn expert tips for creating efficient and scalable React applications with modern practices.",
-      author: "Jane Smith",
-      date: "September 20, 2025",
-      readTime: "7 min read",
-      image: "https://images.unsplash.com/photo-1537432372469-45f3272b0065?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      tags: ["React", "Web Development", "Coding"],
-    },
-    {
-      id: "3",
-      title: "The Rise of Web3: Decentralized Future",
-      excerpt: "Dive into the world of Web3 and understand how blockchain is transforming the internet.",
-      author: "Alex Johnson",
-      date: "September 15, 2025",
-      readTime: "6 min read",
-      image: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      tags: ["Web3", "Blockchain", "Tech"],
-    },
-  ];
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch blogs from API
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/posts"); // API endpoint
+        setBlogs(response.data);
+        console.log("Fetched blogs:", response.data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch blogs. Please try again.", err);
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   return (
     <section className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 rounded-2xl mb-4">
@@ -56,15 +44,32 @@ const BlogContainer = () => {
           </div>
         </div>
 
-        {/* Recent Pulished Blogs */}
-        <h2 className="text-2xl font-bold pl-1 border-l-5 border-l-blue-500 mb-3">Recently Pulished</h2>
+        {/* Recent Published Blogs */}
+        <h2 className="text-2xl font-bold pl-1 border-l-4 border-l-blue-500 mb-3">
+          Recently Published
+        </h2>
+
+        {/* Loading/Error State */}
+        {loading && <p className="text-center text-gray-500">Loading blogs...</p>}
+        {error && <p className="text-center text-red-500">{error}</p>}
 
         {/* Blog Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogs.map((blog) => (
-            <BlogCard key={blog.id} {...blog} />
-          ))}
-        </div>
+        {!loading && !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {blogs.map((blog) => (
+              <BlogCard
+                key={blog._id}
+                title={blog.title}
+                author="Ankit Choubey"
+                date={new Date(blog.createdAt).toLocaleDateString()}
+                readTime="5 min read"
+                image={blog.imageUrl}
+                tags={blog.tags}
+                id= {blog._id}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
