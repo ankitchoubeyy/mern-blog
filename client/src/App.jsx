@@ -11,6 +11,7 @@ import Projects from "./pages/Projects";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
+import SingleBlog from "./pages/SingleBlog";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
         <Route path="/projects" element={<Projects />} />
+        <Route path="/blog/:id" element={<SingleBlog />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

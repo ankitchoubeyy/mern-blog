@@ -1,15 +1,17 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import Hero from '../components/Home/Hero';
+import BlogCard from '../components/BlogCcard';
+import BlogContainer from '../components/BlogContainer';
 
 const Home = () => {
 
-  const currentUser = useSelector((state) => state.user.currentUser);
   return (
     <div className='min-h-[80vh] mx-15'>
-      <h2>Welcome</h2>
-      {currentUser ? currentUser.username : "Please login"}
-      <br />
-      {currentUser ? `Your role is : ${currentUser.role}` : ""}
+      {/* Hero Section */}
+      <Hero/>
+
+      {/* Blog Section */}
+      <BlogContainer/>
     </div>
   )
 }
